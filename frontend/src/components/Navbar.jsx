@@ -34,7 +34,7 @@ export default function Navbar() {
       <div className="mx-auto flex h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-4">
           <Link to="/portfolio" className="text-xl font-display font-bold text-white tracking-wider flex items-center gap-2">
-            <span className="h-8 w-8 rounded-lg bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white shadow-brand-glow">A</span>
+            <span className="h-8 w-8 rounded-lg bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-xs font-black shadow-brand-glow tracking-tight">EL</span>
             <span className="hidden sm:inline">EQUITY LENS</span>
           </Link>
         </div>

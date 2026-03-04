@@ -84,7 +84,7 @@ function StockSearchInput({
 }) {
   return (
     <div className="relative">
-      <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+      <label className="mb-2 block text-xs font-bold uppercase tracking-widest text-slate-300">
         {label}
       </label>
       <input
@@ -102,17 +102,18 @@ function StockSearchInput({
         </p>
       )}
       {open && (searching || suggestions.length > 0) && (
-        <div className="absolute z-30 mt-2 max-h-64 w-full overflow-auto rounded-xl border border-white/10 bg-surface/95 backdrop-blur-xl shadow-2xl ring-1 ring-black/5">
-          {searching && <div className="px-4 py-3 text-sm text-slate-500">Searching...</div>}
+        <div className="absolute z-30 mt-2 max-h-64 w-full overflow-auto rounded-xl border border-white/10 bg-[#13151f] backdrop-blur-xl shadow-2xl">
+          {searching && <div className="px-4 py-3 text-sm text-slate-400">Searching...</div>}
           {!searching &&
             suggestions.map((item) => (
               <button
                 key={`${label}-${item.symbol}`}
                 type="button"
-                className="block w-full border-b border-white/5 px-4 py-3 text-left text-sm text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+                className="block w-full border-b border-white/5 px-4 py-3 text-left text-sm text-slate-200 transition-colors hover:bg-indigo-500/10 hover:text-white"
                 onMouseDown={() => onPick(item)}
               >
-                {optionLabel(item)}
+                <span className="font-semibold text-indigo-300">{item.symbol}</span>
+                <span className="ml-2 text-slate-400">— {item.company_name}</span>
               </button>
             ))}
         </div>
@@ -343,26 +344,26 @@ export default function CompareStocks() {
                   </div>
                 </div>
                 <div className="mt-6 grid grid-cols-2 gap-4">
-                  <div className="rounded-xl border border-white/5 bg-surface/50 p-4 transition-colors hover:border-brand-500/30">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Current Price</p>
+                  <div className="rounded-xl border border-white/8 bg-[#1e2030] p-4 transition-colors hover:border-brand-500/40">
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Current Price</p>
                     <p className="mt-2 text-xl font-bold font-mono text-white">{formatMoney(compareData.stock_a.current_price, compareData.stock_a.currency)}</p>
                   </div>
-                  <div className="rounded-xl border border-white/5 bg-surface/50 p-4 transition-colors hover:border-brand-500/30">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Min Price</p>
-                    <p className="mt-2 text-xl font-bold font-mono text-slate-300">{formatMoney(compareData.stock_a.min_price, compareData.stock_a.currency)}</p>
+                  <div className="rounded-xl border border-white/8 bg-[#1e2030] p-4 transition-colors hover:border-brand-500/40">
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Min Price</p>
+                    <p className="mt-2 text-xl font-bold font-mono text-white">{formatMoney(compareData.stock_a.min_price, compareData.stock_a.currency)}</p>
                   </div>
-                  <div className="rounded-xl border border-white/5 bg-surface/50 p-4 transition-colors hover:border-brand-500/30">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Max Price</p>
-                    <p className="mt-2 text-xl font-bold font-mono text-slate-300">{formatMoney(compareData.stock_a.max_price, compareData.stock_a.currency)}</p>
+                  <div className="rounded-xl border border-white/8 bg-[#1e2030] p-4 transition-colors hover:border-brand-500/40">
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Max Price</p>
+                    <p className="mt-2 text-xl font-bold font-mono text-white">{formatMoney(compareData.stock_a.max_price, compareData.stock_a.currency)}</p>
                   </div>
-                  <div className="rounded-xl border border-white/5 bg-surface/50 p-4 transition-colors hover:border-brand-500/30">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Today Price</p>
-                    <p className="mt-2 text-xl font-bold font-mono text-slate-300">{formatMoney(compareData.stock_a.today_price, compareData.stock_a.currency)}</p>
+                  <div className="rounded-xl border border-white/8 bg-[#1e2030] p-4 transition-colors hover:border-brand-500/40">
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Today Price</p>
+                    <p className="mt-2 text-xl font-bold font-mono text-white">{formatMoney(compareData.stock_a.today_price, compareData.stock_a.currency)}</p>
                   </div>
-                  <div className="rounded-xl border border-brand-500/20 bg-brand-500/5 p-4 col-span-2 flex items-center justify-between group overflow-hidden relative">
-                    <div className="absolute inset-0 bg-brand-500/10 blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 relative z-10">PE Ratio</p>
-                    <p className="text-2xl font-bold font-mono text-brand-400 relative z-10">{formatPe(compareData.stock_a.pe_ratio)}</p>
+                  <div className="rounded-xl border border-indigo-500/30 bg-indigo-500/10 p-4 col-span-2 flex items-center justify-between group overflow-hidden relative">
+                    <div className="absolute inset-0 bg-indigo-500/10 blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-slate-300 relative z-10">PE Ratio</p>
+                    <p className="text-2xl font-bold font-mono text-indigo-300 relative z-10">{formatPe(compareData.stock_a.pe_ratio)}</p>
                   </div>
                 </div>
               </motion.div>
@@ -378,26 +379,26 @@ export default function CompareStocks() {
                   </div>
                 </div>
                 <div className="mt-6 grid grid-cols-2 gap-4">
-                  <div className="rounded-xl border border-white/5 bg-surface/50 p-4 transition-colors hover:border-orange-500/30">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Current Price</p>
+                  <div className="rounded-xl border border-white/8 bg-[#1e2030] p-4 transition-colors hover:border-orange-500/40">
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Current Price</p>
                     <p className="mt-2 text-xl font-bold font-mono text-white">{formatMoney(compareData.stock_b.current_price, compareData.stock_b.currency)}</p>
                   </div>
-                  <div className="rounded-xl border border-white/5 bg-surface/50 p-4 transition-colors hover:border-orange-500/30">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Min Price</p>
-                    <p className="mt-2 text-xl font-bold font-mono text-slate-300">{formatMoney(compareData.stock_b.min_price, compareData.stock_b.currency)}</p>
+                  <div className="rounded-xl border border-white/8 bg-[#1e2030] p-4 transition-colors hover:border-orange-500/40">
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Min Price</p>
+                    <p className="mt-2 text-xl font-bold font-mono text-white">{formatMoney(compareData.stock_b.min_price, compareData.stock_b.currency)}</p>
                   </div>
-                  <div className="rounded-xl border border-white/5 bg-surface/50 p-4 transition-colors hover:border-orange-500/30">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Max Price</p>
-                    <p className="mt-2 text-xl font-bold font-mono text-slate-300">{formatMoney(compareData.stock_b.max_price, compareData.stock_b.currency)}</p>
+                  <div className="rounded-xl border border-white/8 bg-[#1e2030] p-4 transition-colors hover:border-orange-500/40">
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Max Price</p>
+                    <p className="mt-2 text-xl font-bold font-mono text-white">{formatMoney(compareData.stock_b.max_price, compareData.stock_b.currency)}</p>
                   </div>
-                  <div className="rounded-xl border border-white/5 bg-surface/50 p-4 transition-colors hover:border-orange-500/30">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Today Price</p>
-                    <p className="mt-2 text-xl font-bold font-mono text-slate-300">{formatMoney(compareData.stock_b.today_price, compareData.stock_b.currency)}</p>
+                  <div className="rounded-xl border border-white/8 bg-[#1e2030] p-4 transition-colors hover:border-orange-500/40">
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Today Price</p>
+                    <p className="mt-2 text-xl font-bold font-mono text-white">{formatMoney(compareData.stock_b.today_price, compareData.stock_b.currency)}</p>
                   </div>
-                  <div className="rounded-xl border border-orange-500/20 bg-orange-500/5 p-4 col-span-2 flex items-center justify-between group overflow-hidden relative">
+                  <div className="rounded-xl border border-orange-500/30 bg-orange-500/10 p-4 col-span-2 flex items-center justify-between group overflow-hidden relative">
                     <div className="absolute inset-0 bg-orange-500/10 blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 relative z-10">PE Ratio</p>
-                    <p className="text-2xl font-bold font-mono text-orange-400 relative z-10">{formatPe(compareData.stock_b.pe_ratio)}</p>
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-slate-300 relative z-10">PE Ratio</p>
+                    <p className="text-2xl font-bold font-mono text-orange-300 relative z-10">{formatPe(compareData.stock_b.pe_ratio)}</p>
                   </div>
                 </div>
               </motion.div>

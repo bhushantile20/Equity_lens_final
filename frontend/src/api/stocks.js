@@ -69,3 +69,8 @@ export const fetchStockById = async (id) => {
   const { data } = await api.get(`stocks/${id}/`);
   return data;
 };
+
+export const fetchPortfolioAnalysis = async (portfolioId) => {
+  const { data } = await api.get(`portfolio/${portfolioId}/analysis/`);
+  return data;
+};

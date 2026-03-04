@@ -21,6 +21,7 @@ from analytics.services.yahoo_search import (
     search_live_stocks,
 )
 from portfolio.models import Portfolio, Stock
+from stocks.services.pipeline import run_portfolio_analysis
 
 
 class AuthViewSet(viewsets.GenericViewSet):
@@ -113,6 +114,12 @@ class PortfolioViewSet(
             StockListSerializer(stock).data,
             status=status.HTTP_201_CREATED,
         )
+
+    @action(detail=True, methods=["get"], url_path="analysis")
+    def analysis(self, request, pk=None):
+        portfolio = self.get_object()
+        data = run_portfolio_analysis(portfolio.id)
+        return Response(data)
 
 
 class StockViewSet(viewsets.ReadOnlyModelViewSet):

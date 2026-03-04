@@ -35,16 +35,17 @@ export default function StockTable({ stocks, onDeleteStock, deletingStockId }) {
   };
 
   const SortIcon = ({ columnKey }) => {
-    if (sortConfig.key !== columnKey) return <ArrowUpDown size={14} className="ml-1 text-slate-400 opacity-50 group-hover:opacity-100 transition-opacity" />;
+    if (sortConfig.key !== columnKey) return <ArrowUpDown size={14} className="ml-1 text-slate-400 opacity-60 group-hover:opacity-100 transition-opacity" />;
     return sortConfig.direction === 'asc'
-      ? <ArrowUp size={14} className="ml-1 text-brand-400" />
-      : <ArrowDown size={14} className="ml-1 text-brand-400" />;
+      ? <ArrowUp size={14} className="ml-1 text-indigo-400" />
+      : <ArrowDown size={14} className="ml-1 text-indigo-400" />;
   };
 
   const Th = ({ children, columnKey, align = 'left' }) => (
     <th
       className={cn(
-        "px-4 py-4 text-xs font-semibold uppercase tracking-wider text-slate-200 cursor-pointer group bg-surface/95 backdrop-blur-md sticky top-0 z-20 border-b border-white/10 whitespace-nowrap",
+        "px-4 py-3.5 text-xs font-bold uppercase tracking-widest cursor-pointer group sticky top-0 z-20 whitespace-nowrap",
+        "bg-[#1a1d2e] text-slate-100 border-b-2 border-indigo-500/40",
         align === 'right' ? 'text-right' : align === 'center' ? 'text-center' : 'text-left'
       )}
       onClick={() => requestSort(columnKey)}
@@ -72,7 +73,7 @@ export default function StockTable({ stocks, onDeleteStock, deletingStockId }) {
               <Th columnKey="closing_price" align="right">Today Price</Th>
               <Th columnKey="pe_ratio" align="right">PE Ratio</Th>
               <Th columnKey="discount_level" align="center">Discount Level</Th>
-              <th className="px-4 py-4 text-right text-xs font-semibold uppercase tracking-wider text-slate-200 bg-surface/95 backdrop-blur-md sticky top-0 z-20 border-b border-white/10 w-24">Action</th>
+              <th className="px-4 py-3.5 text-right text-xs font-bold uppercase tracking-widest bg-[#1a1d2e] text-slate-100 border-b-2 border-indigo-500/40 sticky top-0 z-20 w-24">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5 bg-transparent">

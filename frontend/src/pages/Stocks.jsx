@@ -14,6 +14,7 @@ import {
 import Loader from "../components/Loader";
 import SearchBar from "../components/SearchBar";
 import StockTable from "../components/StockTable";
+import PortfolioAnalysis from "../components/PortfolioAnalysis";
 import { currencyCodeFromItem, formatMoney } from "../utils/currency";
 import {
   addStockToPortfolio,
@@ -34,6 +35,7 @@ export default function Stocks() {
   const [stocks, setStocks] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("holdings");
   const [addingSymbol, setAddingSymbol] = useState("");
   const [deletingStockId, setDeletingStockId] = useState(null);
   const [message, setMessage] = useState("");
@@ -275,32 +277,63 @@ export default function Stocks() {
             </div>
           ) : (
             <>
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-                <StockTable
-                  stocks={stocks}
-                  onDeleteStock={handleDeleteStock}
-                  deletingStockId={deletingStockId}
-                />
-              </motion.div>
+              <div className="flex bg-[#13151f] p-1 rounded-xl w-fit border border-white/10 mb-6">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("holdings")}
+                  className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${activeTab === "holdings"
+                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/30"
+                    : "text-slate-200 hover:text-white hover:bg-white/5"
+                    }`}
+                >
+                  Holdings
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("analysis")}
+                  className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all duration-200 flex items-center gap-2 ${activeTab === "analysis"
+                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/30"
+                    : "text-slate-200 hover:text-white hover:bg-white/5"
+                    }`}
+                >
+                  ✦ AI Analysis
+                </button>
+              </div>
 
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="card p-6">
-                <h2 className="text-lg font-display font-semibold text-white mb-6">PE Ratio Comparison</h2>
-                <div className="h-80 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={peChartData} margin={{ top: 8, right: 20, left: 0, bottom: 8 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                      <XAxis dataKey="symbol" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: 'rgba(255,255,255,0.1)' }} tickLine={false} />
-                      <YAxis tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={{ stroke: 'rgba(255,255,255,0.1)' }} tickLine={false} />
-                      <Tooltip
-                        contentStyle={{ backgroundColor: "#0f111a", borderColor: "rgba(255,255,255,0.1)", borderRadius: "12px", color: "#fff", boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}
-                        itemStyle={{ color: "#818cf8" }}
-                        cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                      />
-                      <Bar dataKey="pe_ratio" fill="#6366f1" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </motion.div>
+              {activeTab === "holdings" ? (
+                <>
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                    <StockTable
+                      stocks={stocks}
+                      onDeleteStock={handleDeleteStock}
+                      deletingStockId={deletingStockId}
+                    />
+                  </motion.div>
+
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="card p-6">
+                    <h2 className="text-lg font-display font-semibold text-white mb-6">PE Ratio Comparison</h2>
+                    <div className="h-80 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={peChartData} margin={{ top: 8, right: 20, left: 0, bottom: 8 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                          <XAxis dataKey="symbol" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: 'rgba(255,255,255,0.1)' }} tickLine={false} />
+                          <YAxis tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={{ stroke: 'rgba(255,255,255,0.1)' }} tickLine={false} />
+                          <Tooltip
+                            contentStyle={{ backgroundColor: "#0f111a", borderColor: "rgba(255,255,255,0.1)", borderRadius: "12px", color: "#fff", boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}
+                            itemStyle={{ color: "#818cf8" }}
+                            cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                          />
+                          <Bar dataKey="pe_ratio" fill="#6366f1" radius={[4, 4, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </motion.div>
+                </>
+              ) : (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                  <PortfolioAnalysis portfolioId={portfolioId} />
+                </motion.div>
+              )}
             </>
           )}
         </motion.div>

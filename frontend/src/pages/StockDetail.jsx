@@ -95,22 +95,22 @@ export default function StockDetail() {
           <div>
             <h2 className="text-lg font-display font-semibold text-white">Price Snapshot</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-4">
-              <div className="rounded-xl border border-white/5 bg-surface/50 p-4 relative overflow-hidden group hover:border-brand-500/30 transition-colors">
-                <div className="absolute top-0 right-0 p-4 -mr-4 -mt-4 opacity-5 bg-brand-500 blur-2xl rounded-full w-16 h-16 group-hover:opacity-20 transition-opacity" />
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 relative z-10">Current Price</p>
+              <div className="rounded-xl border border-white/8 bg-[#1e2030] p-4 relative overflow-hidden group hover:border-brand-500/40 transition-colors">
+                <div className="absolute top-0 right-0 p-4 -mr-4 -mt-4 opacity-5 bg-indigo-500 blur-2xl rounded-full w-16 h-16 group-hover:opacity-20 transition-opacity" />
+                <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 relative z-10">Current Price</p>
                 <p className="mt-2 text-xl font-bold font-mono text-white relative z-10">{formatMoney(stock.current_price, currencyCode)}</p>
               </div>
-              <div className="rounded-xl border border-white/5 bg-surface/50 p-4 hover:border-brand-500/30 transition-colors">
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Min Price</p>
-                <p className="mt-2 text-xl font-bold font-mono text-slate-300">{formatMoney(stock.min_price, currencyCode)}</p>
+              <div className="rounded-xl border border-white/8 bg-[#1e2030] p-4 hover:border-brand-500/40 transition-colors">
+                <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Min Price</p>
+                <p className="mt-2 text-xl font-bold font-mono text-white">{formatMoney(stock.min_price, currencyCode)}</p>
               </div>
-              <div className="rounded-xl border border-white/5 bg-surface/50 p-4 hover:border-brand-500/30 transition-colors">
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Max Price</p>
-                <p className="mt-2 text-xl font-bold font-mono text-slate-300">{formatMoney(stock.max_price, currencyCode)}</p>
+              <div className="rounded-xl border border-white/8 bg-[#1e2030] p-4 hover:border-brand-500/40 transition-colors">
+                <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Max Price</p>
+                <p className="mt-2 text-xl font-bold font-mono text-white">{formatMoney(stock.max_price, currencyCode)}</p>
               </div>
-              <div className="rounded-xl border border-white/5 bg-surface/50 p-4 hover:border-brand-500/30 transition-colors">
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Today Price</p>
-                <p className="mt-2 text-xl font-bold font-mono text-slate-300">{formatMoney(stock.today_price, currencyCode)}</p>
+              <div className="rounded-xl border border-white/8 bg-[#1e2030] p-4 hover:border-brand-500/40 transition-colors">
+                <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Today Price</p>
+                <p className="mt-2 text-xl font-bold font-mono text-white">{formatMoney(stock.today_price, currencyCode)}</p>
               </div>
             </div>
           </div>
@@ -118,20 +118,20 @@ export default function StockDetail() {
           <div className="mt-8">
             <h2 className="text-lg font-display font-semibold text-white">Analytics</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-3">
-              <div className="rounded-xl border border-white/5 bg-surface/50 p-4 flex flex-col justify-center">
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">PE Ratio</p>
+              <div className="rounded-xl border border-white/8 bg-[#1e2030] p-4 flex flex-col justify-center">
+                <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">PE Ratio</p>
                 <p className="mt-2 text-2xl font-bold font-mono text-white">{stock.analytics?.pe_ratio ?? "-"}</p>
               </div>
-              <div className="rounded-xl border border-white/5 bg-surface/50 p-4 flex flex-col justify-center">
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Discount Level</p>
+              <div className="rounded-xl border border-white/8 bg-[#1e2030] p-4 flex flex-col justify-center">
+                <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">Discount Level</p>
                 <div className="self-start">
                   <OpportunityBadge level={stock.analytics?.discount_level} />
                 </div>
               </div>
-              <div className="rounded-xl border border-brand-500/20 bg-brand-500/5 p-4 relative overflow-hidden group">
-                <div className="absolute inset-0 bg-brand-500/10 blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 relative z-10">Opportunity Score</p>
-                <p className="mt-2 text-3xl font-bold text-brand-400 relative z-10">{stock.analytics?.opportunity_score ?? "-"}</p>
+              <div className="rounded-xl border border-indigo-500/30 bg-indigo-500/10 p-4 relative overflow-hidden group">
+                <div className="absolute inset-0 bg-indigo-500/10 blur-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
+                <p className="text-[11px] font-bold uppercase tracking-widest text-slate-300 relative z-10">Opportunity Score</p>
+                <p className="mt-2 text-3xl font-bold text-indigo-300 relative z-10">{stock.analytics?.opportunity_score ?? "-"}</p>
               </div>
             </div>
           </div>
