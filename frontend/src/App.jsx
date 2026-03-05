@@ -9,6 +9,7 @@ import Stocks from "./pages/Stocks";
 import StockDetail from "./pages/StockDetail";
 import LiveStockDetail from "./pages/LiveStockDetail";
 import CompareStocks from "./pages/CompareStocks";
+import GoldSilverAnalysis from "./pages/GoldSilverAnalysis";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -59,6 +60,16 @@ function AnimatedRoutes() {
             <ProtectedRoute>
               <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="h-full">
                 <CompareStocks />
+              </motion.div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/gold-silver"
+          element={
+            <ProtectedRoute>
+              <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="h-full">
+                <GoldSilverAnalysis />
               </motion.div>
             </ProtectedRoute>
           }

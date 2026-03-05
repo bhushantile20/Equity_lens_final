@@ -63,7 +63,8 @@ export default function PortfolioAnalysis({ portfolioId }) {
             name: stock.symbol,
             pe_ratio: Number(stock.pe_ratio) || 0,
             discount: parseDiscountNumeric(stock.discount_level),
-            discountLabel: stock.discount_level || "LOW"
+            discountLabel: stock.discount_level || "LOW",
+            cluster: stock.cluster_label || "Hold"
         }));
     }, [data]);
 
@@ -117,7 +118,7 @@ export default function PortfolioAnalysis({ portfolioId }) {
                         <thead className="sticky top-0 z-20">
                             <tr>
                                 <th className="px-4 py-3.5 text-left text-xs font-bold uppercase tracking-widest bg-[#1a1d2e] text-slate-100 border-b-2 border-indigo-500/40">Symbol</th>
-                                <th className="px-4 py-3.5 text-center text-xs font-bold uppercase tracking-widest bg-[#1a1d2e] text-slate-100 border-b-2 border-indigo-500/40">Cluster Group</th>
+                                <th className="px-4 py-3.5 text-center text-xs font-bold uppercase tracking-widest bg-[#1a1d2e] text-slate-100 border-b-2 border-indigo-500/40">Performance Class</th>
                                 <th className="px-4 py-3.5 text-right text-xs font-bold uppercase tracking-widest bg-[#1a1d2e] text-slate-100 border-b-2 border-indigo-500/40">Predicted Price</th>
                                 <th className="px-4 py-3.5 text-right text-xs font-bold uppercase tracking-widest bg-[#1a1d2e] text-slate-100 border-b-2 border-indigo-500/40">Expected Return</th>
                                 <th className="px-4 py-3.5 text-center text-xs font-bold uppercase tracking-widest bg-[#1a1d2e] text-slate-100 border-b-2 border-indigo-500/40">Buy Signal</th>
@@ -136,6 +137,12 @@ export default function PortfolioAnalysis({ portfolioId }) {
                                 else if (stock.buy_signal === "HOLD") signalClass = "bg-amber-500/10 text-amber-300 border-amber-500/20";
                                 else if (stock.buy_signal === "AVOID") signalClass = "bg-rose-500/10 text-rose-400 border-rose-500/20";
 
+                                let clusterClass = "bg-slate-500/20 text-slate-300 border-slate-500/30";
+                                const cLabel = stock.cluster_label || "Hold";
+                                if (cLabel === "High performance") clusterClass = "bg-emerald-500/20 text-emerald-400 border-emerald-500/30 shadow-glow";
+                                else if (cLabel === "Hold") clusterClass = "bg-amber-500/10 text-amber-300 border-amber-500/20";
+                                else if (cLabel === "Failed") clusterClass = "bg-rose-500/10 text-rose-400 border-rose-500/20";
+
                                 return (
                                     <tr key={stock.symbol} className="transition-colors hover:bg-white/5">
                                         <td className="px-4 py-4 text-sm font-bold text-white whitespace-nowrap">
@@ -143,8 +150,8 @@ export default function PortfolioAnalysis({ portfolioId }) {
                                             <span className="ml-2 text-xs font-medium text-slate-500">{stock.company_name}</span>
                                         </td>
                                         <td className="px-4 py-4 text-center whitespace-nowrap">
-                                            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-brand-500/20 text-brand-300 border border-brand-500/50 text-xs font-bold font-mono">
-                                                {stock.cluster ?? 0}
+                                            <span className={cn("inline-flex px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full border", clusterClass)}>
+                                                {cLabel}
                                             </span>
                                         </td>
                                         <td className="px-4 py-4 text-right text-sm font-mono text-slate-300 whitespace-nowrap">
@@ -211,71 +218,17 @@ export default function PortfolioAnalysis({ portfolioId }) {
                                         if (name === "Discount Factor") return [props.payload.discountLabel, "Discount"];
                                         return [value, name];
                                     }}
+                                    labelFormatter={(label, payload) => {
+                                        if (payload && payload.length) {
+                                            const data = payload[0].payload;
+                                            return `${data.name} (${data.cluster})`;
+                                        }
+                                        return label;
+                                    }}
                                 />
                                 <Scatter name="Stocks" data={scatterData} fill="#818cf8" shape="circle" />
                             </ScatterChart>
                         </ResponsiveContainer>
-                    </div>
-                </motion.div>
-
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="card p-6">
-                    <h2 className="text-lg font-display font-semibold text-white mb-2 flex items-center gap-2">
-                        <Activity size={18} className="text-brand-400" />
-                        Feature Correlation Matrix
-                    </h2>
-                    <p className="text-xs text-slate-400 mb-6">Heatmap showing variable relationships (Red = Negative, Green = Positive).</p>
-
-                    <div className="overflow-x-auto w-full rounded-lg border border-white/5">
-                        {corrKeys.length > 0 ? (
-                            <table className="w-full text-xs text-center border-collapse">
-                                <thead>
-                                    <tr>
-                                        <th className="p-2 border border-white/5 bg-[#1a1d2e] text-slate-100 font-bold text-left">Features</th>
-                                        {corrKeys.map(k => (
-                                            <th key={k} className="p-2 border border-white/5 bg-[#1a1d2e] text-slate-100 font-bold whitespace-nowrap" title={k}>
-                                                {k.length > 10 ? k.substring(0, 10) + '...' : k}
-                                            </th>
-                                        ))}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {corrKeys.map(rowKey => (
-                                        <tr key={rowKey}>
-                                            <td className="p-2 border border-white/5 bg-[#1a1d2e] text-slate-100 font-bold text-left whitespace-nowrap" title={rowKey}>
-                                                {rowKey.length > 12 ? rowKey.substring(0, 12) + '...' : rowKey}
-                                            </td>
-                                            {corrKeys.map(colKey => {
-                                                const val = correlation[rowKey][colKey] || 0;
-                                                const isPos = val > 0;
-                                                const absVal = Math.abs(val);
-
-                                                // Dynamic heatmap color based on correlation strength
-                                                let bgColor = "transparent";
-                                                if (absVal > 0.1) {
-                                                    const intensity = Math.min(absVal * 0.5 + 0.1, 0.8);
-                                                    bgColor = isPos
-                                                        ? `rgba(16, 185, 129, ${intensity})`
-                                                        : `rgba(244, 63, 94, ${intensity})`;
-                                                }
-
-                                                return (
-                                                    <td
-                                                        key={colKey}
-                                                        className="p-2 border border-white/5 font-mono text-[10px] text-white/90"
-                                                        style={{ backgroundColor: bgColor }}
-                                                        title={`${rowKey} vs ${colKey}: ${val.toFixed(4)}`}
-                                                    >
-                                                        {val.toFixed(2)}
-                                                    </td>
-                                                );
-                                            })}
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        ) : (
-                            <div className="p-8 text-center text-slate-500">Correlation data unavailable.</div>
-                        )}
                     </div>
                 </motion.div>
             </div>

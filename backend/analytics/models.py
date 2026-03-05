@@ -20,3 +20,6 @@ class StockAnalytics(models.Model):
 
     def __str__(self) -> str:
         return f"Analytics({self.stock.symbol})"
+
+
+    

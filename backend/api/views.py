@@ -213,3 +213,28 @@ class StockViewSet(viewsets.ReadOnlyModelViewSet):
         stock = self.get_object()
         stock.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# ---------------------------------------------------------------------------
+# Gold vs Silver ML Pipeline — independent, does NOT touch existing models
+# ---------------------------------------------------------------------------
+from rest_framework.views import APIView  # noqa: E402
+
+
+class GoldSilverAnalysisView(APIView):
+    """
+    Runs the Gold vs Silver ML pipeline and returns structured JSON.
+
+    GET /api/gold-silver/analysis/
+    """
+
+    def get(self, request):
+        try:
+            from ml_pipeline.gold_silver_pipeline import run_gold_silver_pipeline
+            result = run_gold_silver_pipeline()
+            return Response(result, status=status.HTTP_200_OK)
+        except Exception as exc:
+            return Response(
+                {"detail": f"Pipeline failed: {str(exc)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )

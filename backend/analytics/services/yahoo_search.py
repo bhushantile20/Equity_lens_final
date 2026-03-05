@@ -35,12 +35,21 @@ def _normalize_interval(interval: str | None) -> str:
 
 
 def _infer_currency(symbol: str, reported_currency: str | None = None) -> str:
-    if reported_currency:
-        return str(reported_currency).upper()
-    symbol_upper = str(symbol or "").upper()
-    if symbol_upper.endswith(".NS") or symbol_upper.endswith(".BO"):
-        return "INR"
-    return "USD"
+    # All NSE stocks are priced in INR
+    return "INR"
+
+
+def _to_nse(symbol: str) -> str:
+    """Ensure the symbol has the .NS suffix for NSE India."""
+    s = symbol.strip().upper()
+    if not s.endswith(".NS"):
+        s = s + ".NS"
+    return s
+
+
+def _is_nse(symbol: str) -> bool:
+    """Return True only if the symbol is an NSE (.NS) ticker."""
+    return str(symbol).upper().endswith(".NS")
 
 
 def _extract_prices(history):
@@ -123,19 +132,23 @@ def _fetch_ticker_payload(symbol: str, period: str, interval: str) -> dict[str, 
 
 def search_live_stocks(query: str, limit: int = 10) -> list[dict[str, Any]]:
     """
-    Search worldwide stocks from Yahoo Finance and return normalized rows
-    compatible with stock list table fields.
+    Search NSE (India) stocks from Yahoo Finance.
+    Only returns tickers ending with .NS (National Stock Exchange).
     """
     if not query.strip():
         return []
 
+    # Build candidate list — NSE symbols only
     candidates: list[dict[str, str]] = []
     try:
-        search = yf.Search(query, max_results=limit)
+        search = yf.Search(query, max_results=limit * 5)  # fetch more to allow NSE filtering
         quotes = getattr(search, "quotes", []) or []
         for quote in quotes:
-            symbol = quote.get("symbol")
+            symbol = quote.get("symbol", "")
             if not symbol:
+                continue
+            # Only allow NSE India stocks
+            if not _is_nse(symbol):
                 continue
             quote_type = quote.get("quoteType")
             if quote_type and str(quote_type).upper() != "EQUITY":
@@ -152,12 +165,13 @@ def search_live_stocks(query: str, limit: int = 10) -> list[dict[str, Any]]:
     except Exception:
         candidates = []
 
+    # Fallback: try the query itself with .NS appended
     if not candidates:
-        candidates = [{"symbol": query.upper(), "company_name": query.upper()}]
+        candidates = [{"symbol": _to_nse(query), "company_name": query.upper()}]
 
     results: list[dict[str, Any]] = []
     for candidate in candidates[:limit]:
-        symbol = candidate["symbol"]
+        symbol = candidate["symbol"]  # guaranteed .NS at this point
         try:
             ticker = yf.Ticker(symbol)
             history = ticker.history(period="1y", interval="1d")
@@ -174,12 +188,10 @@ def search_live_stocks(query: str, limit: int = 10) -> list[dict[str, Any]]:
 
             pe_ratio = None
             company_name = candidate["company_name"]
-            currency = None
             try:
                 info = ticker.info or {}
                 pe_ratio = info.get("trailingPE") or info.get("forwardPE")
                 company_name = info.get("shortName") or info.get("longName") or company_name
-                currency = info.get("currency")
             except Exception:
                 pass
 
@@ -194,7 +206,7 @@ def search_live_stocks(query: str, limit: int = 10) -> list[dict[str, Any]]:
                     "max_price": max_price,
                     "closing_price": closing_price,
                     "pe_ratio": pe_ratio_value,
-                    "currency": _infer_currency(symbol, currency),
+                    "currency": "INR",
                     "discount_level": _discount_level(
                         min_price=min_price,
                         max_price=max_price,
@@ -215,14 +227,11 @@ def fetch_live_stock_detail(
     interval: str = "1d",
 ) -> dict[str, Any] | None:
     """
-    Fetch one live stock detail from Yahoo Finance and return payload
-    compatible with local StockDetail response shape.
+    Fetch NSE India stock detail from Yahoo Finance.
+    Automatically appends .NS suffix if not present.
     """
-    ticker_symbol = symbol.strip().upper()
-    if not ticker_symbol:
-        return None
-
-    normalized_period = _normalize_period(period)
+    ticker_symbol = _to_nse(symbol)  # enforce NSE suffix
+    normalized_period   = _normalize_period(period)
     normalized_interval = _normalize_interval(interval)
 
     try:
@@ -231,38 +240,38 @@ def fetch_live_stock_detail(
             period=normalized_period,
             interval=normalized_interval,
         )
-        prices = payload["prices"]
+        prices        = payload["prices"]
         current_price = payload["current_price"]
-        min_price = payload["min_price"]
-        max_price = payload["max_price"]
+        min_price     = payload["min_price"]
+        max_price     = payload["max_price"]
         discount_level = _discount_level(min_price=min_price, max_price=max_price, current_price=current_price)
-        pe_ratio = payload["pe_ratio"]
-        pe_value = pe_ratio if pe_ratio is not None else 0.0
+        pe_ratio       = payload["pe_ratio"]
+        pe_value       = pe_ratio if pe_ratio is not None else 0.0
         opportunity_score = opportunity_engine(pe_ratio=pe_value, discount_level=discount_level)
 
         return {
-            "id": None,
-            "portfolio": None,
-            "portfolio_name": "Global Search",
-            "symbol": ticker_symbol,
-            "company_name": payload["company_name"],
-            "sector": "Global",
-            "currency": payload["currency"],
-            "current_price": current_price,
-            "min_price": round(min_price, 2),
-            "max_price": round(max_price, 2),
-            "today_price": round(current_price, 2),
-            "is_live": True,
+            "id":             None,
+            "portfolio":      None,
+            "portfolio_name": "NSE India",
+            "symbol":         ticker_symbol,
+            "company_name":   payload["company_name"],
+            "sector":         "NSE India",
+            "currency":       "INR",
+            "current_price":  current_price,
+            "min_price":      round(min_price, 2),
+            "max_price":      round(max_price, 2),
+            "today_price":    round(current_price, 2),
+            "is_live":        True,
             "analytics": {
-                "pe_ratio": pe_ratio,
-                "discount_level": discount_level,
+                "pe_ratio":         pe_ratio,
+                "discount_level":   discount_level,
                 "opportunity_score": opportunity_score,
                 "graph_data": {
-                    "dates": payload["dates"],
-                    "price": prices,
+                    "dates":      payload["dates"],
+                    "price":      prices,
                     "moving_avg": payload["moving_avg"],
-                    "period": normalized_period,
-                    "interval": normalized_interval,
+                    "period":     normalized_period,
+                    "interval":   normalized_interval,
                 },
                 "last_updated": datetime.now(timezone.utc).isoformat(),
             },
@@ -277,12 +286,11 @@ def fetch_live_stock_comparison(
     period: str = "5y",
     interval: str = "1d",
 ) -> dict[str, Any]:
-    ticker_a = symbol_a.strip().upper()
-    ticker_b = symbol_b.strip().upper()
-    if not ticker_a or not ticker_b:
-        raise ValueError("Both stock symbols are required.")
+    # Enforce NSE suffix on both symbols
+    ticker_a = _to_nse(symbol_a)
+    ticker_b = _to_nse(symbol_b)
     if ticker_a == ticker_b:
-        raise ValueError("Please select two different stocks.")
+        raise ValueError("Please select two different NSE stocks.")
 
     normalized_period = _normalize_period(period or "5y")
     normalized_interval = _normalize_interval(interval)

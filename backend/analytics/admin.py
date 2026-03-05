@@ -2,7 +2,6 @@ from django.contrib import admin
 
 from analytics.models import StockAnalytics
 
-
 @admin.register(StockAnalytics)
 class StockAnalyticsAdmin(admin.ModelAdmin):
     list_display = (
