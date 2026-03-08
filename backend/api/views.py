@@ -6,6 +6,8 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+import logging
+
 from api.serializers import (
     AddStockToPortfolioSerializer,
     LoginSerializer,
@@ -20,8 +22,12 @@ from analytics.services.yahoo_search import (
     fetch_live_stock_detail,
     search_live_stocks,
 )
+from analytics.services.ticker import get_live_ticker_data
 from portfolio.models import Portfolio, Stock
 from stocks.services.pipeline import run_portfolio_analysis
+
+
+logger = logging.getLogger(__name__)
 
 
 class AuthViewSet(viewsets.GenericViewSet):
@@ -238,3 +244,33 @@ class GoldSilverAnalysisView(APIView):
                 {"detail": f"Pipeline failed: {str(exc)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+
+class AssetForecastView(APIView):
+    """
+    Returns historical data and a 30-day ML forecast for a given asset string.
+    GET /api/forecast/?asset=BTC-USD
+    """
+    def get(self, request):
+        asset = request.query_params.get("asset", "BTC-USD")
+        try:
+            from analytics.services.forecasting import generate_forecast
+            data = generate_forecast(asset, days_ahead=30)
+            return Response(data, status=status.HTTP_200_OK)
+        except Exception as exc:
+            return Response(
+                {"detail": f"Forecast failed: {str(exc)}"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+
+class LiveTickerView(APIView):
+    permission_classes = [] # Public endpoint since it's on the landing page
+
+    def get(self, request):
+        try:
+            data = get_live_ticker_data()
+            return Response(data, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.error(f"Error fetching live ticker: {str(e)}")
+            return Response({"error": "Failed to fetch live ticker data"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

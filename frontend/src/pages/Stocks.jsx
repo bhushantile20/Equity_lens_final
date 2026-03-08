@@ -15,6 +15,7 @@ import Loader from "../components/Loader";
 import SearchBar from "../components/SearchBar";
 import StockTable from "../components/StockTable";
 import PortfolioAnalysis from "../components/PortfolioAnalysis";
+import CryptoForecasting from "../components/CryptoForecasting";
 import { currencyCodeFromItem, formatMoney } from "../utils/currency";
 import {
   addStockToPortfolio,
@@ -190,12 +191,14 @@ export default function Stocks() {
         </Link>
       </div>
 
-      <div className="card p-6">
-        <SearchBar value={searchQuery} onChange={setSearchQuery} onSubmit={handleSearch} />
-        <p className="mt-3 text-xs text-slate-500">
-          Search live symbols directly from the market and add them to your portfolio.
-        </p>
-      </div>
+      {selectedPortfolio?.type !== "crypto_ai" && (
+        <div className="card p-6">
+          <SearchBar value={searchQuery} onChange={setSearchQuery} onSubmit={handleSearch} />
+          <p className="mt-3 text-xs text-slate-500">
+            Search live symbols directly from the market and add them to your portfolio.
+          </p>
+        </div>
+      )}
 
       <AnimatePresence>
         {message && (
@@ -214,6 +217,10 @@ export default function Stocks() {
         <div className="card p-6">
           <Loader />
         </div>
+      ) : selectedPortfolio?.type === "crypto_ai" ? (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ staggerChildren: 0.1 }} className="space-y-6">
+          <CryptoForecasting />
+        </motion.div>
       ) : (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ staggerChildren: 0.1 }} className="space-y-6">
           {searchResults.length > 0 && (

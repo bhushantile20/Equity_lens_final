@@ -7,12 +7,17 @@
     @apply bg-background text-slate-200 antialiased;
     font-family: 'Inter', sans-serif;
     background: radial-gradient(circle at top right, #1e1b4b 0%, #0f111a 40%),
-                radial-gradient(circle at bottom left, #052e16 0%, #0f111a 40%);
+      radial-gradient(circle at bottom left, #052e16 0%, #0f111a 40%);
     background-attachment: fixed;
     min-height: 100vh;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: 'Poppins', sans-serif;
   }
 }
@@ -43,13 +48,30 @@
   width: 8px;
   height: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 35s linear infinite;
 }

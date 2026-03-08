@@ -10,6 +10,7 @@ import StockDetail from "./pages/StockDetail";
 import LiveStockDetail from "./pages/LiveStockDetail";
 import CompareStocks from "./pages/CompareStocks";
 import GoldSilverAnalysis from "./pages/GoldSilverAnalysis";
+import Landing from "./pages/Landing";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -17,7 +18,8 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Navigate to="/portfolio" replace />} />
+        <Route path="/" element={<Landing />} />
+        <Route path="/dashboard" element={<Navigate to="/portfolio" replace />} />
         <Route
           path="/login"
           element={
@@ -38,9 +40,11 @@ function AnimatedRoutes() {
           path="/portfolio"
           element={
             <ProtectedRoute>
-              <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="h-full">
-                <Portfolio />
-              </motion.div>
+              <Layout>
+                <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="h-full">
+                  <Portfolio />
+                </motion.div>
+              </Layout>
             </ProtectedRoute>
           }
         />
@@ -48,9 +52,11 @@ function AnimatedRoutes() {
           path="/stocks"
           element={
             <ProtectedRoute>
-              <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="h-full">
-                <Stocks />
-              </motion.div>
+              <Layout>
+                <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="h-full">
+                  <Stocks />
+                </motion.div>
+              </Layout>
             </ProtectedRoute>
           }
         />
@@ -58,9 +64,11 @@ function AnimatedRoutes() {
           path="/compare"
           element={
             <ProtectedRoute>
-              <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="h-full">
-                <CompareStocks />
-              </motion.div>
+              <Layout>
+                <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="h-full">
+                  <CompareStocks />
+                </motion.div>
+              </Layout>
             </ProtectedRoute>
           }
         />
@@ -68,9 +76,11 @@ function AnimatedRoutes() {
           path="/gold-silver"
           element={
             <ProtectedRoute>
-              <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="h-full">
-                <GoldSilverAnalysis />
-              </motion.div>
+              <Layout>
+                <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="h-full">
+                  <GoldSilverAnalysis />
+                </motion.div>
+              </Layout>
             </ProtectedRoute>
           }
         />
@@ -78,9 +88,11 @@ function AnimatedRoutes() {
           path="/stocks/:id"
           element={
             <ProtectedRoute>
-              <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.02 }} className="h-full">
-                <StockDetail />
-              </motion.div>
+              <Layout>
+                <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.02 }} className="h-full">
+                  <StockDetail />
+                </motion.div>
+              </Layout>
             </ProtectedRoute>
           }
         />
@@ -88,13 +100,15 @@ function AnimatedRoutes() {
           path="/stocks/live/:symbol"
           element={
             <ProtectedRoute>
-              <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.02 }} className="h-full">
-                <LiveStockDetail />
-              </motion.div>
+              <Layout>
+                <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.02 }} className="h-full">
+                  <LiveStockDetail />
+                </motion.div>
+              </Layout>
             </ProtectedRoute>
           }
         />
-        <Route path="*" element={<Navigate to="/portfolio" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AnimatePresence>
   );
@@ -102,8 +116,8 @@ function AnimatedRoutes() {
 
 export default function App() {
   return (
-    <Layout>
+    <>
       <AnimatedRoutes />
-    </Layout>
+    </>
   );
 }

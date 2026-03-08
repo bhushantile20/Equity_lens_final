@@ -156,4 +156,4 @@ class StockDetailSerializer(serializers.ModelSerializer):
 class PortfolioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Portfolio
-        fields = ("id", "name", "description")
+        fields = ("id", "name", "description", "type")

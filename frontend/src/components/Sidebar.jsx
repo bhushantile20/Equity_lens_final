@@ -8,6 +8,7 @@ import {
     ChevronLeft,
     ChevronRight,
     Gem,
+    Cpu,
 } from "lucide-react";
 import { cn } from "../utils/cn";
 
@@ -25,6 +26,7 @@ export default function Sidebar() {
     const links = [
         { name: "Portfolio", path: "/portfolio", icon: LayoutDashboard },
         { name: "Stocks", path: stocksPath, match: "/stocks", icon: LineChart },
+        { name: "Crypto AI", path: "/stocks?portfolio=9", match: "/stocks?portfolio=9", icon: Cpu },
         { name: "Compare", path: "/compare", icon: ArrowLeftRight },
         { name: "Gold vs Silver", path: "/gold-silver", icon: Gem },
     ];

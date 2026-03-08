@@ -74,3 +74,9 @@ export const fetchPortfolioAnalysis = async (portfolioId) => {
   const { data } = await api.get(`portfolio/${portfolioId}/analysis/`);
   return data;
 };
+
+export const fetchAssetForecast = async (asset) => {
+  const queryParams = new URLSearchParams({ asset });
+  const { data } = await api.get(`forecast/?${queryParams.toString()}`);
+  return data;
+};

@@ -12,6 +12,7 @@ Steps:
 - Predict Silver price movement direction (UP / DOWN)
 """
 
+
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
@@ -39,28 +40,35 @@ def train_regression_model(merged_df: pd.DataFrame) -> dict:
           - predicted_silver_price: predicted Silver price for latest Gold
           - current_silver_price: actual latest Silver price
     """
+
     X = merged_df[["Gold_Close"]].values
     y = merged_df["Silver_Close"].values
+
 
     # 80/20 train-test split
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
 
+
     # Train the model
     model = LinearRegression()
     model.fit(X_train, y_train)
+
 
     # Evaluate
     y_pred = model.predict(X_test)
     r2 = float(r2_score(y_test, y_pred))
     mse = float(mean_squared_error(y_test, y_pred))
 
+
     print(f"[Model] R² Score: {r2:.4f}")
     print(f"[Model] MSE: {mse:.4f}")
+
 
     # Predict next Silver price from the latest Gold price
     last_gold_price = float(merged_df["Gold_Close"].iloc[-1])
     predicted_silver_price = float(model.predict([[last_gold_price]])[0])
     current_silver_price = float(merged_df["Silver_Close"].iloc[-1])
+
 
     # Determine trend direction
     trend = "UP" if predicted_silver_price > current_silver_price else "DOWN"
