@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
+import api from "../api/axios";
 
 export default function LiveTicker() {
     const [tickerData, setTickerData] = useState([]);
@@ -8,10 +9,8 @@ export default function LiveTicker() {
     useEffect(() => {
         const fetchTicker = async () => {
             try {
-                const response = await fetch("http://127.0.0.1:8000/api/ticker/");
-                if (!response.ok) throw new Error("Failed to fetch ticker data");
-                const data = await response.json();
-                setTickerData(data);
+                const response = await api.get("ticker/");
+                setTickerData(response.data);
             } catch (err) {
                 console.error(err);
                 // Fallback mock data in case API fails

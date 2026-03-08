@@ -1,16 +1,21 @@
 import axios from "axios";
 
+let baseURL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api/";
+
+// Ensure the baseURL is correctly formatted for the Django backend standard (must end with /api/)
+if (baseURL) {
+  baseURL = baseURL.replace(/\/+$/, ""); // Trim trailing slashes
+  if (!baseURL.endsWith("/api")) {
+    baseURL += "/api/";
+  } else {
+    baseURL += "/";
+  }
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL, //|| "http://127.0.0.1:8000/api/",
+  baseURL: baseURL,
   timeout: 15000,
 });
-
-// const API_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
-
-// // Example Usage:
-// // fetch(`${API_URL}/api/ticker/`)
-
-
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("auth_token");
   if (token) {
