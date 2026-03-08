@@ -5,6 +5,12 @@ const api = axios.create({
   timeout: 15000,
 });
 
+// const API_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+
+// // Example Usage:
+// // fetch(`${API_URL}/api/ticker/`)
+
+
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("auth_token");
   if (token) {
@@ -25,5 +31,7 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+
 
 export default api;

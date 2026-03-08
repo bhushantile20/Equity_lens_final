@@ -100,4 +100,3 @@ CORS_ALLOWED_ORIGINS = [
 
 ALLOWED_HOSTS = ['*'] # In production, restrict this to your actual Render domain and frontend URL
 
-s
